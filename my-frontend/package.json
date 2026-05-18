@@ -8,18 +8,18 @@
     "@react-google-maps/api": "^2.19.3",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "axios": "^1.6.8",
-    "bootstrap": "4.6.2",
+    "bootstrap": "^4.6.2",
     "chart.js": "3.9.1",
     "perfect-scrollbar": "1.5.5",
-    "react": ">=16.8.0",
+    "react": "^18.2.0",
     "react-chartjs-2": "3.3.0",
-    "react-dom": ">=16.8.0",
+    "react-dom": "^18.2.0",
     "react-icons": "^5.2.0",
     "react-notification-alert": "0.0.13",
     "react-qr-barcode-scanner": "^1.0.6",
-    "react-router-dom": "^6.11.1",
+    "react-router-dom": "^6.30.3",
     "react-scripts": "5.0.1",
-    "reactstrap": "8.10.0",
+    "reactstrap": "^8.10.1",
     "sass": "1.62.1"
   },
   "scripts": {
@@ -34,10 +34,6 @@
   "optionalDependencies": {
     "@babel/core": "7.21.8",
     "typescript": "5.0.4"
-  },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
   },
   "overrides": {
     "svgo": "3.0.2",
@@ -55,5 +51,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0"
   }
 }

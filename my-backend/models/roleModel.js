@@ -1,12 +1,25 @@
-const mongoose = require('mongoose');
+const db = require('../config/db');
 
-const roleSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        enum: ['user', 'admin', 'manager'] // Add more roles as needed
-    }
-});
+const Role = {
+  create(role, callback) {
+    db.query(
+      'INSERT INTO roles (name) VALUES (?)',
+      [role.name],
+      callback
+    );
+  },
 
-const Role = mongoose.model('Role', roleSchema);
+  getAll(callback) {
+    db.query('SELECT * FROM roles', callback);
+  },
+
+  findById(id, callback) {
+    db.query('SELECT * FROM roles WHERE id = ?', [id], callback);
+  },
+
+  findByName(name, callback) {
+    db.query('SELECT * FROM roles WHERE name = ?', [name], callback);
+  },
+};
 
 module.exports = Role;

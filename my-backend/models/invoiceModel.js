@@ -1,27 +1,49 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const moment = require('moment-timezone');
+const db = require('../config/db');
 
-const invoiceSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
-    items: [{
-        product: { type: Schema.Types.ObjectId, ref: 'Product' },
-        quantity: Number,
-        price: Number
-    }],
-    totalAmount: Number,
-    totalProfit: Number,
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
-});
+const Invoice = {
+  getAll(callback) {
+    db.query(
+      `SELECT invoices.*, users.name AS user_name
+       FROM invoices
+       LEFT JOIN users ON invoices.user_id = users.id`,
+      callback
+    );
+  },
 
-// Middleware to convert timestamps to Asia/Shanghai timezone before saving
-invoiceSchema.pre('save', function(next) {
-    this.createdAt = moment.utc(this.createdAt).tz('Asia/Shanghai').toDate();
-    this.updatedAt = moment.utc(this.updatedAt).tz('Asia/Shanghai').toDate();
-    next();
-});
+  findById(id, callback) {
+    db.query('SELECT * FROM invoices WHERE id = ?', [id], callback);
+  },
 
-const Invoice = mongoose.model('Invoice', invoiceSchema);
+  findItems(invoiceId, callback) {
+    db.query(
+      `SELECT invoice_items.*, products.name AS product_name
+       FROM invoice_items
+       LEFT JOIN products ON invoice_items.product_id = products.id
+       WHERE invoice_items.invoice_id = ?`,
+      [invoiceId],
+      callback
+    );
+  },
 
-module.exports = Invoice;
+  create(data, callback) {
+    db.query(
+      'INSERT INTO invoices (user_id, total_amount, total_profit) VALUES (?, ?, ?)',
+      [data.user_id, data.total_amount, data.total_profit],
+      callback
+    );
+  },
+
+  addItem(data, callback) {
+    db.query(
+      'INSERT INTO invoice_items (invoice_id, product_id, quantity, price) VALUES (?, ?, ?, ?)',
+      [data.invoice_id, data.product_id, data.quantity, data.price],
+      callback
+    );
+  },
+
+  delete(id, callback) {
+    db.query('DELETE FROM invoices WHERE id = ?', [id], callback);
+  }
+};
+
+module.exports = Invoice;   

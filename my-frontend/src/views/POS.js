@@ -45,8 +45,8 @@ function POS() {
   }, []);
 
   const addToCart = (product) => {
-    const existingProductIndex = cart.findIndex((item) => item._id === product._id);
-    const productIndex = products.findIndex(p => p._id === product._id);
+    const existingProductIndex = cart.findIndex((item) => item.id === product.id);
+    const productIndex = products.findIndex((p) => p.id === product.id);
 
     if (existingProductIndex !== -1 && products[productIndex].quantity > 0) {
       const updatedCart = [...cart];
@@ -58,6 +58,7 @@ function POS() {
       setProducts(updatedProducts);
     } else if (existingProductIndex === -1 && products[productIndex].quantity > 0) {
       setCart([...cart, { ...product, quantity: 1 }]);
+
       const updatedProducts = [...products];
       updatedProducts[productIndex].quantity -= 1;
       setProducts(updatedProducts);
@@ -65,8 +66,8 @@ function POS() {
   };
 
   const updateQuantity = (productId, amount) => {
-    const cartIndex = cart.findIndex(item => item._id === productId);
-    const productIndex = products.findIndex(item => item._id === productId);
+    const cartIndex = cart.findIndex((item) => item.id === productId);
+    const productIndex = products.findIndex((item) => item.id === productId);
 
     if (cartIndex === -1 || productIndex === -1) return;
 
@@ -84,7 +85,7 @@ function POS() {
     setCart(newCart);
     setProducts(newProducts);
   };
-
+  
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -94,12 +95,12 @@ function POS() {
   );
 
   const calculateTotalAmount = () => {
-    return cart.reduce((total, item) => total + item.retailPrice * item.quantity, 0);
+    return cart.reduce((total, item) => total + Number(item.retail_price) * item.quantity, 0);
   };
 
   const calculateTotalProfit = () => {
     return cart.reduce((profit, item) => {
-      const profitPerItem = item.retailPrice - item.price;
+      const profitPerItem = Number(item.retail_price) - Number(item.price);
       return profit + profitPerItem * item.quantity;
     }, 0);
   };
@@ -112,7 +113,7 @@ function POS() {
       }
 
       const userData = JSON.parse(userDataJson);
-      const userId = userData._id;
+      const userId = userData.id;
 
       const invoiceData = {
         user: userId,
@@ -180,7 +181,7 @@ function POS() {
           <div style={{ overflowY: 'auto', height: 'calc(100vh - 100px)', padding: '0 15px' }}>
             <Row>
               {filteredProducts.map((product) => (
-                <Col md="3" key={product._id} style={{ marginBottom: '15px' }}>
+                <Col md="3" key={product.id} style={{ marginBottom: '15px' }}>
                   <Card style={{ height: '340px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
                     <CardHeader>
                       <CardTitle style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '1rem' }}>
@@ -193,7 +194,7 @@ function POS() {
                         alt={product.name}
                         style={{ maxWidth: '100%', maxHeight: '120px', objectFit: 'contain', marginBottom: '10px' }}
                       />
-                      <CardText>₱{product.retailPrice}</CardText>
+                      <CardText>₱{product.retail_price}</CardText>
                       {product.quantity === 0 ? (
                         <CardText style={{ color: 'red' }}>No Stock</CardText>
                       ) : (
@@ -236,13 +237,13 @@ function POS() {
                   {cart.map((item, index) => (
                     <tr key={index}>
                       <td>{item.name}</td>
-                      <td>₱{item.retailPrice}</td>
+                      <td>₱{item.retail_price}</td>
                       <td>{item.quantity}</td>
                       <td>
                         <Button
                           color="danger"
                           size="sm"
-                          onClick={() => updateQuantity(item._id, -1)}
+                          onClick={() => updateQuantity(item.id, -1)}
                           style={{ padding: '3px', fontSize: '0.8rem', marginRight: '5px' }}
                         >
                           <FaMinus />
@@ -250,9 +251,9 @@ function POS() {
                         <Button
                           color="primary"
                           size="sm"
-                          onClick={() => updateQuantity(item._id, 1)}
+                          onClick={() => updateQuantity(item.id, 1)}
                           style={{ padding: '3px', fontSize: '0.8rem' }}
-                          disabled={products.find(product => product._id === item._id).quantity === 0}
+                          disabled={products.find(product => product.id === item.id).quantity === 0}
                         >
                           <FaPlus />
                         </Button>
@@ -261,7 +262,7 @@ function POS() {
                   ))}
                 </tbody>
               </Table>
-              <div>Total: ₱{cart.reduce((total, item) => total + item.retailPrice * item.quantity, 0)}</div>
+              <div>Total: ₱{cart.reduce((total, item) => total + item.retail_price * item.quantity, 0)}</div>
               <Button color="success" onClick={handleCheckout}>Checkout</Button>
             </CardBody>
           </Card>

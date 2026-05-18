@@ -1,43 +1,43 @@
 const express = require('express');
 
 const {
-    createUser,
-    getUser,
-    loginUser
+  createUser,
+  getUser,
+  loginUser,
 } = require('../controllers/userController');
 
 const {
-    createProduct,
-    getAllProducts,
-    getProductById,
-    updateProduct,
-    deleteProduct,
-    updateProductImage,
-    getProductInfoByBarcode,
-    getProductsByIds
+  createProduct,
+  getAllProducts,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+  updateProductImage,
+  getProductInfoByBarcode,
+  getProductsByIds,
 } = require('../controllers/productController');
 
 const {
-    getAllProductTypes,
-    createProductType,
-    getProductTypeById,
-    deleteProductType
+  getAllProductTypes,
+  createProductType,
+  getProductTypeById,
+  deleteProductType,
 } = require('../controllers/productTypeController');
 
 const {
-    createInvoice,
-    getInvoiceById,
-    updateInvoice,
-    deleteInvoice,
-    invoicesPerMonth,
-    profitPerMonth,
-    getInvoicesByHour,
-    getInvoice
-} = require('../controllers/invoiceController'); 
+  createInvoice,
+  getInvoiceById,
+  updateInvoice,
+  deleteInvoice,
+  invoicesPerMonth,
+  profitPerMonth,
+  getInvoicesByHour,
+  getInvoice,
+} = require('../controllers/invoiceController');
 
 const router = express.Router();
 
-//Graphs
+// Graph routes
 router.get('/invoices/monthly-invoice', invoicesPerMonth);
 router.get('/invoices/monthly-profit', profitPerMonth);
 router.get('/invoices/hourly-invoice', getInvoicesByHour);
@@ -51,17 +51,17 @@ router.post('/login', loginUser);
 router.post('/products', createProduct);
 router.get('/products', getAllProducts);
 router.post('/products/many', getProductsByIds);
+router.get('/products/lookup/:barcode', getProductInfoByBarcode);
 router.get('/products/:id', getProductById);
 router.put('/products/:id', updateProduct);
 router.delete('/products/:id', deleteProduct);
-router.put("/products/:id/image", updateProductImage);
-router.get('/products/lookup/:barcode', getProductInfoByBarcode);
+router.put('/products/:id/image', updateProductImage);
 
 // Product Type routes
 router.post('/product-types', createProductType);
 router.get('/product-types', getAllProductTypes);
 router.get('/product-types/:id', getProductTypeById);
-router.put('/product-types/:id', deleteProductType);
+router.delete('/product-types/:id', deleteProductType);
 
 // Invoice routes
 router.post('/invoices', createInvoice);
